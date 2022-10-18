@@ -78,7 +78,6 @@ barba.init({
                 let gradient = getGradient(data.next.namespace); 
                 gsap.set('body', {background: gradient});
                 enterAnimation(next, done, gradient);
-                enterAnimation()
 
 
             },
@@ -90,17 +89,50 @@ barba.init({
                 let current = data.current.container; 
                leaveAnimation(current, done)
 
+
             }, 
             enter(data) {
                 const done = this.async();
                 let next = data.next.container; 
                 let gradient = getGradient(data.next.namespace)
                 enterAnimation(next, done, gradient)
-            }
+            },
 
+        },
+     {
+        // Product page animation 
+        name: 'product-transition',
+        sync: "true",
+        from: {namespace: ['handbag', 'product']}, 
+        to: {namespace: ['product', 'handbag']}, 
+        enter(data) {
+            const done = this.async(); 
+            let next = data.next.container; 
+            productEnterAnimation(next, done); 
+        },
+        leave(data) {
+            const done = this.async(); 
+            let current = data.current.container; 
+            productLeaveAnimation(current, done)
         }
-    ]
-})
+     },
+    ],
+});
+
+function productEnterAnimation  (next, done) {
+    //product sliding animation 
+    tlEnter.fromTo(next, {y: '100%'}, {y: '0%'} )
+    tlEnter.fromTo('.card', {opacity: 0, y: '50'}, {opacity: 1, y: '0', stagger: 0.1, onComplete: done} )
+}
+
+
+function productLeaveAnimation(current, done) {
+    tlLeave.fromTo(current, {y: '0%'}, {y:"100%", onComplete: done});
+}
+
+
+
+
 
 // changing gradient on showcase 
 function getGradient(name) {
@@ -113,5 +145,8 @@ function getGradient(name) {
 return "linear-gradient(260deg, #b27a5c, #7f5450)";
 }
 }
+
+
+
 
 
